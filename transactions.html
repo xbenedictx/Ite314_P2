@@ -19,23 +19,27 @@
 
     <div class="main-content">
         <h1>Transactions</h1>
-        <input type="text" id="search" placeholder="Search..." onkeyup="searchTable('transactionsTable')">
-        <table id="transactionsTable">
-            <thead>
-                <tr>
-                    <th>ID</th>
-                    <th>Customer</th>
-                    <th>Item</th>
-                    <th>Quantity</th>
-                    <th>Total Amount</th>
-                    <th>Transaction Date</th>
-                    <th>Date Added</th>
-                </tr>
-            </thead>
-            <tbody>
-                <!-- Data will be populated via API -->
-            </tbody>
-        </table>
+        <div class="search-bar">
+            <input type="text" id="search" placeholder="Search by Customer or Item..." onkeyup="searchTable('transactionsTable')">
+            <span class="search-icon">🔍</span>
+        </div>
+        <div class="table-wrapper">
+            <table id="transactionsTable">
+                <thead>
+                    <tr>
+                        <th>transaction_id</th>
+                        <th>Customer Name</th>
+                        <th>Item Name</th>
+                        <th>Quantity</th>
+                        <th>Total Amount</th>
+                        <th>Transaction Date</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <!-- Data will be populated via API -->
+                </tbody>
+            </table>
+        </div>
     </div>
 
     <script src="script.js"></script>
@@ -53,7 +57,6 @@
                         <td>${transaction.quantity}</td>
                         <td>${transaction.total_amount}</td>
                         <td>${transaction.transaction_date}</td>
-                        <td>${transaction.date_added}</td>
                     `;
                     tbody.appendChild(row);
                 });
