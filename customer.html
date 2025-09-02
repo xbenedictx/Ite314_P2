@@ -19,22 +19,26 @@
 
     <div class="main-content">
         <h1>Customers</h1>
-        <input type="text" id="search" placeholder="Search..." onkeyup="searchTable('customersTable')">
-        <table id="customersTable">
-            <thead>
-                <tr>
-                    <th>ID</th>
-                    <th>First Name</th>
-                    <th>Last Name</th>
-                    <th>Contact Number</th>
-                    <th>Address</th>
-                    <th>Created At</th>
-                </tr>
-            </thead>
-            <tbody>
-                <!-- Data will be populated via API -->
-            </tbody>
-        </table>
+        <div class="search-bar">
+            <input type="text" id="search" placeholder="Search by Name or Contact..." onkeyup="searchTable('customersTable')">
+            <span class="search-icon">🔍</span>
+        </div>
+        <div class="table-wrapper">
+            <table id="customersTable">
+                <thead>
+                    <tr>
+                        <th>customer_id</th>
+                        <th>First Name</th>
+                        <th>Last Name</th>
+                        <th>Contact Number</th>
+                        <th>Address</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <!-- Data will be populated via API -->
+                </tbody>
+            </table>
+        </div>
     </div>
 
     <script src="script.js"></script>
@@ -51,7 +55,6 @@
                         <td>${customer.last_name}</td>
                         <td>${customer.contact_number}</td>
                         <td>${customer.address}</td>
-                        <td>${customer.created_at}</td>
                     `;
                     tbody.appendChild(row);
                 });
