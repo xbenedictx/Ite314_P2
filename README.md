@@ -1,5 +1,5 @@
 # Ite314_P2
-ITE 314 P2 Performance task
+ITE 314 P2 Performance task: Sari sari Store
 
 Members:
 1. Jermaine Trisha Mae Quero
