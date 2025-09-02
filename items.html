@@ -2,53 +2,60 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Items</title>
     <link rel="stylesheet" href="style.css">
-    <script src="script.js"></script>
-    <script>
-        async function loadItems() {
-            const response = await fetch('api/items.php');
-            const data = await response.json();
-            const tableBody = document.getElementById('items-table-body');
-            tableBody.innerHTML = '';
-            data.forEach(row => {
-                const tr = document.createElement('tr');
-                tr.innerHTML = `
-                    <td>${row.item_id}</td>
-                    <td>${row.item_name}</td>
-                    <td>${row.category}</td>
-                    <td>₱${parseFloat(row.price).toFixed(2)}</td>
-                    <td>${row.stock_quantity}</td>
-                    <td>${row.created_at}</td>
-                `;
-                tableBody.appendChild(tr);
-            });
-        }
-        window.onload = loadItems;
-    </script>
 </head>
 <body>
-    <header>
+    <div class="sidebar">
+        <h2>Sari-Sari Store</h2>
+        <ul>
+            <li><a href="index.html"><span class="icon">🏠</span> Dashboard</a></li>
+            <li><a href="customer.html"><span class="icon">👥</span> Customers</a></li>
+            <li><a href="items.html"><span class="icon">📦</span> Items</a></li>
+            <li><a href="transactions.html"><span class="icon">↔</span> Transactions</a></li>
+        </ul>
+    </div>
+
+    <div class="main-content">
         <h1>Items</h1>
-    </header>
-    <nav>
-        <button onclick="window.location.href='index.html'">Dashboard</button>
-        <button onclick="window.location.href='customer.html'">Customers</button>
-        <button onclick="window.location.href='transactions.html'">Transactions</button>
-    </nav>
-    <div class="container">
-        <input type="text" id="search" onkeyup="searchTable('dataTable')" placeholder="Search items...">
-        <table id="dataTable">
-            <tr>
-                <th>ID</th>
-                <th>Name</th>
-                <th>Category</th>
-                <th>Price</th>
-                <th>Stock Quantity</th>
-                <th>Created At</th>
-            </tr>
-            <tbody id="items-table-body"></tbody>
+        <input type="text" id="search" placeholder="Search..." onkeyup="searchTable('itemsTable')">
+        <table id="itemsTable">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Name</th>
+                    <th>Category</th>
+                    <th>Price</th>
+                    <th>Stock Quantity</th>
+                    <th>Created At</th>
+                </tr>
+            </thead>
+            <tbody>
+                <!-- Data will be populated via API -->
+            </tbody>
         </table>
     </div>
+
+    <script src="script.js"></script>
+    <script>
+        fetch('api/items.php')
+            .then(response => response.json())
+            .then(data => {
+                const tbody = document.querySelector('#itemsTable tbody');
+                data.forEach(item => {
+                    const row = document.createElement('tr');
+                    row.innerHTML = `
+                        <td>${item.item_id}</td>
+                        <td>${item.item_name}</td>
+                        <td>${item.category}</td>
+                        <td>${item.price}</td>
+                        <td>${item.stock_quantity}</td>
+                        <td>${item.created_at}</td>
+                    `;
+                    tbody.appendChild(row);
+                });
+            });
+    </script>
 </body>
 </html>

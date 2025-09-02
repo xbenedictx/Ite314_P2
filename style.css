@@ -3,80 +3,102 @@ body {
     margin: 0;
     padding: 0;
     background-color: #f4f4f4;
+    display: flex;
 }
 
-header {
-    background-color: #333;
-    color: white;
-    padding: 10px;
+.sidebar {
+    width: 250px;
+    background-color: #fff;
+    padding: 20px;
+    height: 100vh;
+    box-shadow: 2px 0 5px rgba(0,0,0,0.1);
+}
+
+.sidebar h2 {
+    color: #333;
     text-align: center;
+    margin-bottom: 20px;
 }
 
-nav {
-    background-color: #ddd;
+.sidebar ul {
+    list-style-type: none;
+    padding: 0;
+}
+
+.sidebar ul li {
+    margin-bottom: 10px;
+}
+
+.sidebar ul li a {
+    text-decoration: none;
+    color: #333;
+    display: flex;
+    align-items: center;
     padding: 10px;
-    text-align: center;
-}
-
-nav button {
-    margin: 5px;
-    padding: 10px 20px;
-    background-color: #4CAF50;
-    color: white;
-    border: none;
-    cursor: pointer;
     border-radius: 5px;
 }
 
-nav button:hover {
-    background-color: #45a049;
+.sidebar ul li a:hover {
+    background-color: #f0f0f0;
 }
 
-.container {
+.sidebar .icon {
+    margin-right: 10px;
+}
+
+.main-content {
+    flex-grow: 1;
     padding: 20px;
 }
 
-table {
-    width: 100%;
-    border-collapse: collapse;
-    margin-top: 20px;
-}
-
-th, td {
-    border: 1px solid #ddd;
-    padding: 8px;
-    text-align: left;
-}
-
-th {
-    background-color: #f2f2f2;
-}
-
-#search {
-    width: 100%;
-    padding: 10px;
-    margin-bottom: 10px;
-    box-sizing: border-box;
+.main-content h1 {
+    color: #333;
+    margin-bottom: 20px;
 }
 
 .dashboard-stats {
     display: flex;
-    justify-content: space-around;
+    justify-content: space-between;
     flex-wrap: wrap;
+    gap: 20px;
 }
 
-.stat {
-    background-color: white;
+.stat-card {
+    background-color: #fff;
     padding: 20px;
-    border: 1px solid #ddd;
+    border-radius: 10px;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
     text-align: center;
     width: 22%;
-    margin: 10px;
-    border-radius: 5px;
-    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    min-width: 200px;
 }
 
-.stat ul {
-    list-style-type: none;
-    padding: 0;
+.stat-card h3 {
+    margin: 0;
+    color: #666;
+    font-size: 1.1em;
+}
+
+.stat-card p {
+    margin: 10px 0 0;
+    color: #333;
+    font-size: 1.2em;
+}
+
+.stat-card .icon {
+    font-size: 1.5em;
+    color: #888;
+}
+
+.analytics {
+    background-color: #fff;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    margin-top: 20px;
+}
+
+.analytics h2 {
+    color: #333;
+    margin-top: 0;
 }
