@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Sari-Sari Store Dashboard</title>
+    <link rel="stylesheet" href="style.css">
+    <script src="script.js"></script>
+    <script>
+        async function loadDashboard() {
+            const response = await fetch('api/dashboard.php');
+            const data = await response.json();
+
+            document.getElementById('total-items').innerText = data.total_items.count;
+            document.getElementById('total-items-analytics').innerText = `${data.total_items.count} unique items, total stock quantity: ${data.total_items.total_stock}.`;
+
+            document.getElementById('num-sales').innerText = data.num_sales.count;
+            document.getElementById('num-sales-analytics').innerText = `${data.num_sales.count} transactions, total revenue: ₱${data.num_sales.total_rev.toFixed(2)}.`;
+
+            const hotItemsList = document.getElementById('hot-items-list');
+            hotItemsList.innerHTML = '';
+            data.hot_items.forEach(item => {
+                const li = document.createElement('li');
+                li.innerText = `${item.item_name} - ${item.total_sold} sold`;
+                hotItemsList.appendChild(li);
+            });
+
+            document.getElementById('num-customers').innerText = data.num_customers.count;
+            document.getElementById('num-customers-analytics').innerText = `${data.num_customers.count} registered, ${data.num_customers.unique_sales} with sales.`;
+        }
+        window.onload = loadDashboard;
+    </script>
+</head>
+<body>
+    <header>
+        <h1>Sari-Sari Store Inventory System</h1>
+    </header>
+    <nav>
+        <button onclick="window.location.href='customer.html'">Customers</button>
+        <button onclick="window.location.href='items.html'">Items</button>
+        <button onclick="window.location.href='transactions.html'">Transactions</button>
+    </nav>
+    <div class="container">
+        <h2>Dashboard</h2>
+        <div class="dashboard-stats">
+            <div class="stat">
+                <h3>Total Items</h3>
+                <p id="total-items"></p>
+                <p>Analytics: <span id="total-items-analytics"></span></p>
+            </div>
+            <div class="stat">
+                <h3>Number of Sales</h3>
+                <p id="num-sales"></p>
+                <p>Analytics: <span id="num-sales-analytics"></span></p>
+            </div>
+            <div class="stat">
+                <h3>Hot Items</h3>
+                <ul id="hot-items-list"></ul>
+                <p>Analytics: Top 5 selling items by quantity sold.</p>
+            </div>
+            <div class="stat">
+                <h3>Number of Customers</h3>
+                <p id="num-customers"></p>
+                <p>Analytics: <span id="num-customers-analytics"></span></p>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
