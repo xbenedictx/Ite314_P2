@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Transactions</title>
+    <link rel="stylesheet" href="style.css">
+    <script src="script.js"></script>
+    <script>
+        async function loadTransactions() {
+            const response = await fetch('api/transactions.php');
+            const data = await response.json();
+            const tableBody = document.getElementById('transactions-table-body');
+            tableBody.innerHTML = '';
+            data.forEach(row => {
+                const tr = document.createElement('tr');
+                tr.innerHTML = `
+                    <td>${row.transaction_id}</td>
+                    <td>${row.customer_name}</td>
+                    <td>${row.item_name}</td>
+                    <td>${row.quantity}</td>
+                    <td>₱${parseFloat(row.total_amount).toFixed(2)}</td>
+                    <td>${row.transaction_date}</td>
+                    <td>${row.date_added}</td>
+                `;
+                tableBody.appendChild(tr);
+            });
+        }
+        window.onload = loadTransactions;
+    </script>
+</head>
+<body>
+    <header>
+        <h1>Transactions</h1>
+    </header>
+    <nav>
+        <button onclick="window.location.href='index.html'">Dashboard</button>
+        <button onclick="window.location.href='customer.html'">Customers</button>
+        <button onclick="window.location.href='items.html'">Items</button>
+    </nav>
+    <div class="container">
+        <input type="text" id="search" onkeyup="searchTable('dataTable')" placeholder="Search transactions...">
+        <table id="dataTable">
+            <tr>
+                <th>ID</th>
+                <th>Customer</th>
+                <th>Item</th>
+                <th>Quantity</th>
+                <th>Total Amount</th>
+                <th>Transaction Date</th>
+                <th>Date Added</th>
+            </tr>
+            <tbody id="transactions-table-body"></tbody>
+        </table>
+    </div>
+</body>
+</html>
