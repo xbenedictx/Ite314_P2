@@ -19,22 +19,26 @@
 
     <div class="main-content">
         <h1>Items</h1>
-        <input type="text" id="search" placeholder="Search..." onkeyup="searchTable('itemsTable')">
-        <table id="itemsTable">
-            <thead>
-                <tr>
-                    <th>ID</th>
-                    <th>Name</th>
-                    <th>Category</th>
-                    <th>Price</th>
-                    <th>Stock Quantity</th>
-                    <th>Created At</th>
-                </tr>
-            </thead>
-            <tbody>
-                <!-- Data will be populated via API -->
-            </tbody>
-        </table>
+        <div class="search-bar">
+            <input type="text" id="search" placeholder="Search by Name or Category..." onkeyup="searchTable('itemsTable')">
+            <span class="search-icon">🔍</span>
+        </div>
+        <div class="table-wrapper">
+            <table id="itemsTable">
+                <thead>
+                    <tr>
+                        <th>item_id</th>
+                        <th>Item Name</th>
+                        <th>Category</th>
+                        <th>Price</th>
+                        <th>Stock Quantity</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <!-- Data will be populated via API -->
+                </tbody>
+            </table>
+        </div>
     </div>
 
     <script src="script.js"></script>
@@ -51,11 +55,11 @@
                         <td>${item.category}</td>
                         <td>${item.price}</td>
                         <td>${item.stock_quantity}</td>
-                        <td>${item.created_at}</td>
                     `;
                     tbody.appendChild(row);
                 });
-            });
+            })
+            .catch(error => console.error('Error:', error));
     </script>
 </body>
 </html>
