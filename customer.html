@@ -2,53 +2,61 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Customers</title>
     <link rel="stylesheet" href="style.css">
-    <script src="script.js"></script>
-    <script>
-        async function loadCustomers() {
-            const response = await fetch('api/customers.php');
-            const data = await response.json();
-            const tableBody = document.getElementById('customer-table-body');
-            tableBody.innerHTML = '';
-            data.forEach(row => {
-                const tr = document.createElement('tr');
-                tr.innerHTML = `
-                    <td>${row.customer_id}</td>
-                    <td>${row.first_name}</td>
-                    <td>${row.last_name}</td>
-                    <td>${row.contact_number}</td>
-                    <td>${row.address}</td>
-                    <td>${row.created_at}</td>
-                `;
-                tableBody.appendChild(tr);
-            });
-        }
-        window.onload = loadCustomers;
-    </script>
 </head>
 <body>
-    <header>
+    <div class="sidebar">
+        <h2>Sari-Sari Store</h2>
+        <ul>
+            <li><a href="index.html"><span class="icon">🏠</span> Dashboard</a></li>
+            <li><a href="customer.html"><span class="icon">👥</span> Customers</a></li>
+            <li><a href="items.html"><span class="icon">📦</span> Items</a></li>
+            <li><a href="transactions.html"><span class="icon">↔</span> Transactions</a></li>
+        </ul>
+    </div>
+
+    <div class="main-content">
         <h1>Customers</h1>
-    </header>
-    <nav>
-        <button onclick="window.location.href='index.html'">Dashboard</button>
-        <button onclick="window.location.href='items.html'">Items</button>
-        <button onclick="window.location.href='transactions.html'">Transactions</button>
-    </nav>
-    <div class="container">
-        <input type="text" id="search" onkeyup="searchTable('dataTable')" placeholder="Search customers...">
-        <table id="dataTable">
-            <tr>
-                <th>ID</th>
-                <th>First Name</th>
-                <th>Last Name</th>
-                <th>Contact Number</th>
-                <th>Address</th>
-                <th>Created At</th>
-            </tr>
-            <tbody id="customer-table-body"></tbody>
+        <input type="text" id="search" placeholder="Search..." onkeyup="searchTable('customersTable')">
+        <table id="customersTable">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>First Name</th>
+                    <th>Last Name</th>
+                    <th>Contact Number</th>
+                    <th>Address</th>
+                    <th>Created At</th>
+                </tr>
+            </thead>
+            <tbody>
+                <!-- Data will be populated via API -->
+            </tbody>
         </table>
     </div>
+
+    <script src="script.js"></script>
+    <script>
+        fetch('api/customer.php')
+            .then(response => response.json())
+            .then(data => {
+                const tbody = document.querySelector('#customersTable tbody');
+                data.forEach(customer => {
+                    const row = document.createElement('tr');
+                    row.innerHTML = `
+                        <td>${customer.customer_id}</td>
+                        <td>${customer.first_name}</td>
+                        <td>${customer.last_name}</td>
+                        <td>${customer.contact_number}</td>
+                        <td>${customer.address}</td>
+                        <td>${customer.created_at}</td>
+                    `;
+                    tbody.appendChild(row);
+                });
+            })
+            .catch(error => console.error('Error:', error));
+    </script>
 </body>
 </html>
