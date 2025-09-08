@@ -5,6 +5,19 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Sari-Sari Store Inventory System</title>
     <link rel="stylesheet" href="style.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        .container{max-width:fit-content;margin:20px}
+        .card-row{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:12px;margin:20px 0}
+        .card{background:#fff;padding:14px;border-radius:12px;box-shadow:0 2px 6px rgba(0,0,0,0.1)}
+        .kpi-title{font-size:12px;color:#555}
+        .kpi-value{font-size:20px;margin-top:6px;font-weight:bold}
+        .main-grid {display:grid;grid-template-columns: 2fr 1fr;gap:12px;}
+        .chart-card{height:fit-content;background:#fff;padding:12px;border-radius:12px;box-shadow:0 2px 6px rgba(0,0,0,0.1)}
+        canvas{max-width:100%;height:300px;padding: 10px 0;}
+        .title-icon{display: flex;align-items: center;}
+        @media(max-width:900px){.main-grid{grid-template-columns:1fr}}
+    </style>
 </head>
 <body>
     <div class="sidebar">
@@ -17,49 +30,94 @@
         </ul>
     </div>
 
-    <div class="main-content">
-        <h1>Main Dashboard</h1>
-        <div class="dashboard-stats">
-            <div class="stat-card">
-                <span class="icon">📦</span>
-                <h3>Total Items</h3>
-                <p id="total-items">...</p>
-            </div>
-            <div class="stat-card">
-                <span class="icon">📈</span>
-                <h3>Total Sales</h3>
-                <p id="total-sales">...</p>
-            </div>
-            <div class="stat-card">
-                <span class="icon">🔥</span>
-                <h3>Hot Items</h3>
-                <p id="hot-items">...</p>
-            </div>
-            <div class="stat-card">
-                <span class="icon">👥</span>
-                <h3>Total Customers</h3>
-                <p id="total-customers">...</p>
-            </div>
-        </div>
+    <div class="container">
+        <h1>Dashboard</h1>
+        <section class="card-row">
+            <div class="card"><div class="title-icon"><div class="kpi-title">Total Items</div><span class="icon">📦</span></div><div class="kpi-value" id="kpi-items">—</div></div>
+            <div class="card"><div class="title-icon"><div class="kpi-title">Total Sales</div><span class="icon">📈</span></div><div class="kpi-value" id="kpi-sales">—</div></div>
+            <div class="card"><div class="title-icon"><div class="kpi-title">Revenue</div><span class="icon">📈</span></div><div class="kpi-value" id="kpi-revenue">—</div></div>
+            <div class="card"><div class="title-icon"><div class="kpi-title">Total Customers</div><span class="icon">👥</span></div><div class="kpi-value" id="kpi-customers">—</div></div>
+        </section>
 
-        <div class="analytics">
-            <h2>Analytics</h2>
-            <!-- Analytics content can be added here later -->
-        </div>
+        <section class="main-grid" style="margin-top:20px">
+            <div class="chart-card">
+                <h3>Transactions</h3>
+                <canvas id="lineChart"></canvas>
+            </div>
+
+            <div class="chart-card" style="height: inherit;">
+                <h3>Hot Items</h3>
+                <canvas id="hotItemsPieChart"></canvas>
+            </div>
+
+            <div class="chart-card">
+                <h3>Sales by Address</h3>
+                <canvas id="barChart"></canvas>
+            </div>
+            
+            <div class="chart-card" style="height: inherit;">
+                <h3>Stock vs Sold</h3>
+                <canvas id="stockPieChart"></canvas>
+            </div>
+        </section>
     </div>
 
-    <script src="script.js"></script>
     <script>
-        // Fetch dashboard data
-        fetch('api/dashboard.php')
-            .then(response => response.json())
-            .then(data => {
-                document.getElementById('total-items').textContent = data.total_items.count + ' (Stock: ' + data.total_items.total_stock + ')';
-                document.getElementById('total-sales').textContent = data.num_sales.count + ' (Revenue: ' + data.num_sales.total_rev + ')';
-                document.getElementById('hot-items').textContent = data.hot_items.map(item => item.item_name + ': ' + item.total_sold).join(', ');
-                document.getElementById('total-customers').textContent = data.num_customers.count + ' (Unique Sales: ' + data.num_customers.unique_sales + ')';
-            })
-            .catch(error => console.error('Error:', error));
+        const lineCtx=document.getElementById('lineChart');
+        const stockPieCtx = document.getElementById('stockPieChart');
+        const hotPieCtx = document.getElementById('hotItemsPieChart');
+        const barCtx = document.getElementById('barChart');
+
+        let lineChart = new Chart(lineCtx,{
+            type:'line',
+            data:{labels:[],datasets:[{label:'Items Sold',data:[],tension:0.35,fill:true,backgroundColor:'rgba(54,162,235,0.2)',borderColor:'#36a2eb'}]},
+            options:{responsive:true,plugins:{legend:{display:false}},scales:{x:{title:{display:true,text:'Date'}},y:{title:{display:true,text:'Items Sold'},beginAtZero:true}}}
+        });
+
+        let stockPieChart = new Chart(stockPieCtx,{
+            type:'pie',
+            data:{labels:['In Stock','Sold'],datasets:[{data:[],backgroundColor:['#36a2eb','#ff6384']}]},
+            options:{responsive:true,plugins:{legend:{position:'bottom'}}}
+        });
+
+        let hotItemsPieChart = new Chart(hotPieCtx,{
+            type:'pie',
+            data:{labels:[],datasets:[{data:[],backgroundColor:['#ffcd56','#4bc0c0','#9966ff','#ff9f40','#36a2eb']}]},
+            options:{responsive:true,plugins:{legend:{position:'bottom'}}}
+        });
+
+        let barChart = new Chart(barCtx,{
+            type:'bar',
+            data:{labels:[],datasets:[{label:'Revenue',data:[],backgroundColor:'#4bc0c0'}]},
+            options:{responsive:true,plugins:{legend:{display:false}},scales:{y:{title:{display:true,text:'Revenue'},beginAtZero:true}}}
+        });
+
+        async function loadData(){
+            const res = await fetch("api/dashboard.php");
+            const data = await res.json();
+
+            document.getElementById('kpi-items').textContent = data.totals.items;
+            document.getElementById('kpi-sales').textContent = data.totals.sales;
+            document.getElementById('kpi-revenue').textContent = new Intl.NumberFormat('en-US',{style:'currency',currency:'USD'}).format(data.totals.revenue);
+            document.getElementById('kpi-customers').textContent = data.totals.customers;
+
+            lineChart.data.labels = data.transactions_over_time.map(r=>r.date);
+            lineChart.data.datasets[0].data = data.transactions_over_time.map(r=>r.total_quantity);
+            lineChart.update();
+
+            stockPieChart.data.datasets[0].data = [data.stock_vs_sold.stock, data.stock_vs_sold.sold];
+            stockPieChart.update();
+
+            hotItemsPieChart.data.labels = data.hot_items.map(r=>r.item_name);
+            hotItemsPieChart.data.datasets[0].data = data.hot_items.map(r=>r.total_sold);
+            hotItemsPieChart.update();
+
+            barChart.data.labels = data.sales_by_address.map(r=>r.address);
+            barChart.data.datasets[0].data = data.sales_by_address.map(r=>r.total_sales);
+            barChart.update();
+        }
+
+        document.addEventListener('DOMContentLoaded', loadData);
     </script>
 </body>
 </html>
