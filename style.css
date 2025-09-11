@@ -109,18 +109,18 @@ body {
     border-radius: 10px;
     box-shadow: 0 2px 5px rgba(0,0,0,0.1);
     margin-top: 20px;
-    overflow-x: auto; /* For horizontal scrolling on small screens */
+    overflow-x: auto; 
 }
 
 .search-bar {
     position: relative;
     margin-bottom: 20px;
-    max-width: 400px; /* Adjustable width */
+    max-width: 400px;
 }
 
 .search-bar input {
-    width: 100%; /* Relative to the search-bar max-width */
-    padding: 10px 40px 10px 15px; /* Increased right padding for icon */
+    width: 100%; 
+    padding: 10px 40px 10px 15px; 
     border: 2px solid #ddd;
     border-radius: 5px;
     font-size: 1em;
@@ -135,12 +135,12 @@ body {
 
 .search-bar .search-icon {
     position: absolute;
-    right: 12px; /* Adjusted to move slightly more to the right */
+    right: 12px; 
     top: 50%;
     transform: translateY(-50%);
-    font-size: 1.3em; /* Slightly larger icon for visibility */
-    color: #666; /* Darker color for better contrast */
-    pointer-events: none; /* Prevents icon from interfering with input click */
+    font-size: 1.3em; 
+    color: #666; 
+    pointer-events: none; 
 }
 
 table {
